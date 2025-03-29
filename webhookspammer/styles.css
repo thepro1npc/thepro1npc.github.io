@@ -12,78 +12,44 @@ body {
 
 .container {
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     background: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    padding: 30px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 30px;
     transition: background-color 0.3s ease;
 }
 
-body.dark-mode {
-    background-color: #121212;
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-body.dark-mode .container {
-    background: #333;
-}
-
-body.dark-mode .form-group label,
-body.dark-mode .form-group input,
-body.dark-mode .form-group textarea {
-    color: #fff;
-}
-
-body.dark-mode .button {
-    background-color: #007bff;
-    color: #fff;
+.hidden {
+    display: none;
 }
 
 h1 {
-    font-size: 24px;
-    margin: 0 0 10px;
+    font-size: 28px;
+    margin-bottom: 20px;
     text-align: center;
-    color: #333;
-    transition: color 0.3s ease;
-}
-
-h1, .form-group label {
-    color: #333;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
 }
 
 input, textarea, button {
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-bottom: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 15px;
     box-sizing: border-box;
     transition: all 0.3s ease;
-}
-
-input, textarea {
-    background-color: #fff;
 }
 
 input:focus, textarea:focus {
@@ -92,8 +58,8 @@ input:focus, textarea:focus {
 }
 
 textarea {
+    height: 120px;
     resize: none;
-    height: 100px;
 }
 
 button {
@@ -101,7 +67,7 @@ button {
     color: #fff;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     transition: background-color 0.3s, transform 0.2s;
 }
 
@@ -113,60 +79,22 @@ button:active {
     transform: scale(0.98);
 }
 
-button#toggle-theme {
-    background-color: transparent;
-    border: 1px solid #007bff;
-    padding: 5px;
-    font-size: 18px;
-    cursor: pointer;
-    align-self: flex-end;
-    transition: background-color 0.3s;
+button.hidden {
+    display: none;
 }
 
-button#toggle-theme:hover {
-    background-color: #007bff;
-    color: #fff;
+#preview {
+    width: 100%;
+    padding: 10px;
+    background-color: #f1f5f9;
+    border-radius: 6px;
+    margin-bottom: 20px;
 }
 
-.webhook-list {
-    margin-top: 15px;
-}
-
-.webhook-item {
-    background: #f1f5f9;
-    padding: 15px;
-    border: 1px solid #e1e4e8;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: background-color 0.3s ease;
-}
-
-body.dark-mode .webhook-item {
-    background: #444;
-}
-
-.webhook-item h3 {
-    font-size: 14px;
+#preview-content p {
+    margin: 5px 0;
+    font-size: 16px;
     color: #333;
-    margin: 0 0 5px 0;
-}
-
-body.dark-mode .webhook-item h3 {
-    color: #fff;
-}
-
-.webhook-item p {
-    margin: 0;
-    font-size: 14px;
-    color: #555;
-    white-space: pre-wrap;
-}
-
-body.dark-mode .webhook-item p {
-    color: #bbb;
 }
 
 .notification {
@@ -207,18 +135,4 @@ body.dark-mode .webhook-item p {
 
 .notification.error {
     background-color: #dc3545;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-
-    input, textarea, button {
-        font-size: 16px;
-    }
-
-    .webhook-item {
-        padding: 10px;
-    }
 }

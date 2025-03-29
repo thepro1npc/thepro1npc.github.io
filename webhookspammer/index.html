@@ -8,20 +8,42 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Webhook Dashboard</h1>
-            <button id="toggle-theme">🌙</button>
-        </header>
-        <form id="webhook-form">
-            <input type="text" id="webhook-url" placeholder="Webhook URL" required>
-            <input type="text" id="webhook-username" placeholder="Username">
-            <input type="text" id="webhook-avatar" placeholder="Profile Picture URL">
-            <textarea id="webhook-message" placeholder="Message" required></textarea>
-            <button type="submit">Add Webhook</button>
-        </form>
-        <div id="webhook-list"></div>
+        <div id="main-page" class="page">
+            <h1>Enter Webhook URL</h1>
+            <form id="webhook-form">
+                <input type="text" id="webhook-url" placeholder="Enter Webhook URL" required>
+                <button type="submit">Proceed</button>
+            </form>
+        </div>
+
+        <div id="info-page" class="page hidden">
+            <h1>Webhook Information</h1>
+            <p>Here you can find details about the webhook functionality and how to use it.</p>
+            <button id="go-back" onclick="showPage('main-page')">Go Back</button>
+        </div>
+
+        <div id="post-page" class="page hidden">
+            <h1>Post Webhook</h1>
+            <div id="preview">
+                <p><strong>Preview:</strong></p>
+                <div id="preview-content">
+                    <p id="preview-message"></p>
+                    <p id="preview-username"></p>
+                    <p id="preview-webhook-url"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="webhook-message">Message</label>
+                <textarea id="webhook-message" placeholder="Enter your message (multi-line)" required></textarea>
+            </div>
+            <button id="start-spam" onclick="toggleSpam()">Start Spam</button>
+            <button id="stop-spam" onclick="stopSpam()" class="hidden">Stop Spam</button>
+            <button id="go-back-post" onclick="showPage('main-page')">Go Back</button>
+        </div>
     </div>
+
     <div id="notification" class="notification"></div>
+
     <script src="script.js"></script>
 </body>
 </html>

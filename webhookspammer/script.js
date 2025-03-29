@@ -1,42 +1,72 @@
 let webhookIntervals = {};
+let webhookUrl = '';
+let username = 'Webhook';
+let avatar = '';
+let message = '';
 
 document.getElementById('webhook-form').addEventListener('submit', function(event) {
     event.preventDefault();
-    const url = document.getElementById('webhook-url').value;
-    const username = document.getElementById('webhook-username').value || 'Webhook';
-    const avatar = document.getElementById('webhook-avatar').value;
-    const message = document.getElementById('webhook-message').value;
-
-    if (url && message) {
-        addWebhook(url, username, avatar, message);
-        document.getElementById('webhook-url').value = '';
-        document.getElementById('webhook-username').value = '';
-        document.getElementById('webhook-avatar').value = '';
-        document.getElementById('webhook-message').value = '';
+    webhookUrl = document.getElementById('webhook-url').value;
+    if (webhookUrl) {
+        showPage('post-page');
+        updatePreview();
     }
 });
 
-function addWebhook(url, username, avatar, message) {
-    const webhookList = document.getElementById('webhook-list');
-    const webhookItem = document.createElement('div');
-    webhookItem.className = 'webhook-item';
-    webhookItem.innerHTML = `
-        <div>
-            <h3>Webhook URL:</h3>
-            <p>${url}</p>
-            <h3>Username:</h3>
-            <p>${username}</p>
-            <h3>Profile Picture:</h3>
-            <p>${avatar}</p>
-            <h3>Message:</h3>
-            <p>${message}</p>
-        </div>
-        <div>
-            <button class="toggle start-spam" onclick="toggleSpam('${url}', '${username}', '${avatar}', '${message}', this)">Start Spam</button>
-            <button class="delete" onclick="deleteWebhook(this)">X</button>
-        </div>
-    `;
-    webhookList.appendChild(webhookItem);
+document.getElementById('webhook-message').addEventListener('input', function() {
+    message = this.value;
+    updatePreview();
+});
+
+function updatePreview() {
+    document.getElementById('preview-message').textContent = `Message: ${message || 'No message'}`;
+    document.getElementById('preview-username').textContent = `Username: ${username}`;
+    document.getElementById('preview-webhook-url').textContent = `Webhook URL: ${webhookUrl}`;
+}
+
+function toggleSpam() {
+    const startButton = document.getElementById('start-spam');
+    const stopButton = document.getElementById('stop-spam');
+
+    if (startButton.style.display !== 'none') {
+        startButton.style.display = 'none';
+        stopButton.style.display = 'inline-block';
+
+        function sendWebhook() {
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: message, username: username, avatar_url: avatar })
+            })
+            .then(response => {
+                if (response.status === 429) {
+                    showNotification('Rate Limited - Retrying...', 'warning');
+                    setTimeout(sendWebhook, 1000);
+                }
+            })
+            .catch(error => {
+                showNotification('Error occurred', 'error');
+                stopSpam();
+            });
+        }
+
+        webhookIntervals[webhookUrl] = setInterval(sendWebhook, 100);
+        showNotification('Webhook spam started.', 'info');
+    }
+}
+
+function stopSpam() {
+    clearInterval(webhookIntervals[webhookUrl]);
+    delete webhookIntervals[webhookUrl];
+    document.getElementById('start-spam').style.display = 'inline-block';
+    document.getElementById('stop-spam').style.display = 'none';
+    showNotification('Webhook spam stopped.', 'info');
+}
+
+function showPage(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
 }
 
 function showNotification(message, type = 'info') {
@@ -47,61 +77,3 @@ function showNotification(message, type = 'info') {
         notification.className = 'notification hide';
     }, 5000);
 }
-
-function toggleSpam(url, username, avatar, message, element) {
-    if (element.classList.contains('active')) {
-        clearInterval(webhookIntervals[url]);
-        delete webhookIntervals[url];
-        element.classList.remove('active');
-        element.textContent = 'Start Spam';
-        element.classList.replace('stop-spam', 'start-spam');
-        showNotification('Webhook spam stopped.', 'info');
-    } else {
-        function sendWebhook() {
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: message,
-                    username: username,
-                    avatar_url: avatar
-                }),
-            })
-            .then(response => {
-                if (response.status === 429) {
-                    showNotification('Rate Limited - Retrying...', 'warning');
-                    setTimeout(sendWebhook, 1000);
-                }
-            })
-            .catch(error => {
-                showNotification('Webhook has been deleted or error occurred', 'error');
-                clearInterval(webhookIntervals[url]);
-                delete webhookIntervals[url];
-                element.classList.remove('active');
-                element.textContent = 'Start Spam';
-                element.classList.replace('stop-spam', 'start-spam');
-            });
-        }
-
-        webhookIntervals[url] = setInterval(sendWebhook, 100);
-        element.classList.add('active');
-        element.textContent = 'Stop Spam';
-        element.classList.replace('start-spam', 'stop-spam');
-        showNotification('Webhook spam started.', 'info');
-    }
-}
-
-function deleteWebhook(button) {
-    const webhookItem = button.closest('.webhook-item');
-    if (webhookItem) {
-        const url = webhookItem.querySelector('p').textContent;
-        clearInterval(webhookIntervals[url]);
-        delete webhookIntervals[url];
-        webhookItem.remove();
-        showNotification('Webhook removed.', 'info');
-    }
-}
-
-document.getElementById('toggle-theme').addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-});
