@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Webhook Dashboard</h1>
+            <button id="toggle-theme">🌙</button>
+        </header>
+        <form id="webhook-form">
+            <input type="text" id="webhook-url" placeholder="Webhook URL" required>
+            <input type="text" id="webhook-username" placeholder="Username">
+            <input type="text" id="webhook-avatar" placeholder="Profile Picture URL">
+            <textarea id="webhook-message" placeholder="Message" required></textarea>
+            <button type="submit">Add Webhook</button>
+        </form>
+        <div id="webhook-list"></div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <script src="script.js"></script>
+</body>
+</html>
