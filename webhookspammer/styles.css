@@ -6,77 +6,97 @@
   
   body {
     font-family: 'Arial', sans-serif;
-    background-color: #2C2F36;
+    background-color: #20232A;
     color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
   }
   
   .container {
-    width: 80%;
-    max-width: 700px;
-    background-color: #363A45;
-    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    background-color: #282C34;
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   }
   
-  h1 {
+  header {
     text-align: center;
-    color: #f1f1f1;
+    margin-bottom: 30px;
   }
   
-  input, textarea {
+  header h1 {
+    font-size: 2.5rem;
+    color: #61dafb;
+  }
+  
+  header p {
+    font-size: 1.2rem;
+  }
+  
+  #webhook-url-section, #spamming-section, #preview-section {
+    margin-bottom: 20px;
+  }
+  
+  #webhook-url-section input, #spamming-section textarea, #spamming-section input {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
-    border: 1px solid #555;
-    background-color: #2C2F36;
+    background-color: #3a3f47;
     color: #fff;
+    border: 1px solid #444;
   }
   
   button {
-    padding: 10px 15px;
-    border-radius: 5px;
+    background-color: #61dafb;
+    color: #20232A;
+    padding: 10px 20px;
     border: none;
-    background-color: #ff4081;
-    color: #fff;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
   
   button:hover {
-    background-color: #e1006a;
+    background-color: #4fa3f7;
+  }
+  
+  .hidden {
+    display: none;
   }
   
   footer {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
   }
   
-  footer a {
-    color: #ff4081;
-    text-decoration: none;
+  footer p {
+    color: #999;
   }
   
-  footer a:hover {
-    text-decoration: underline;
-  }
-  
-  #webhook-preview {
+  #preview-details {
     background-color: #444851;
     padding: 15px;
-    margin-bottom: 20px;
     border-radius: 5px;
+    margin-bottom: 20px;
   }
   
-  #webhook-preview span {
+  #preview-details span {
     font-weight: bold;
   }
   
-  .message-input button {
-    margin-right: 10px;
+  #status-message {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  #url-error {
+    color: red;
+    font-size: 0.9rem;
   }
   

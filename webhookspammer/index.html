@@ -5,30 +5,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Discord Webhook Spammer</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>Discord Webhook Spammer</h1>
-    <div class="webhook-input">
-      <label for="webhookURL">Enter Webhook URL:</label>
-      <input type="url" id="webhookURL" placeholder="Enter your webhook URL" required>
-      <button onclick="saveWebhook()">Submit</button>
-    </div>
-    <p id="error-message"></p>
+    <header>
+      <h1>Discord Webhook Spammer</h1>
+      <p>Send messages to your Discord server with the power of webhooks!</p>
+    </header>
+    
+    <section id="webhook-url-section">
+      <label for="webhookURL">Enter Your Webhook URL:</label>
+      <input type="url" id="webhookURL" placeholder="https://discord.com/api/webhooks/..." required>
+      <button onclick="setupWebhook()">Set Webhook</button>
+      <p id="url-error"></p>
+    </section>
+
+    <section id="preview-section" class="hidden">
+      <h2>Preview</h2>
+      <div id="preview-details">
+        <p><strong>Webhook URL:</strong> <span id="webhook-name">Unknown</span></p>
+        <p><strong>Server Name:</strong> <span id="server-name">Your Server</span></p>
+        <p><strong>Message:</strong> <span id="message-preview">No message</span></p>
+        <p><strong>User:</strong> <span id="user-preview">Anonymous</span></p>
+      </div>
+    </section>
+
+    <section id="spamming-section" class="hidden">
+      <h2>Start Spamming</h2>
+      <textarea id="message" placeholder="Enter your message..." rows="5"></textarea>
+      <input type="text" id="username" placeholder="Enter username" />
+      <button onclick="startSpamming()">Start Spamming</button>
+      <button onclick="stopSpamming()">Stop Spamming</button>
+      <p id="status-message"></p>
+    </section>
+
     <footer>
-      <a href="information.html">Information</a>
+      <p>made with 💖 by burntribs24</p>
     </footer>
   </div>
 
   <script>
-    function saveWebhook() {
+    let spamInterval;
+
+    function setupWebhook() {
       const webhookURL = document.getElementById('webhookURL').value;
-      if (webhookURL === '') {
-        document.getElementById('error-message').innerText = "Webhook URL cannot be empty!";
-      } else {
-        localStorage.setItem('webhookURL', webhookURL);
-        window.location.href = "post.html";
+      if (!webhookURL || !isValidURL(webhookURL)) {
+        document.getElementById('url-error').innerText = "Please enter a valid URL.";
+        return;
       }
+      localStorage.setItem('webhookURL', webhookURL);
+      document.getElementById('url-error').innerText = '';
+      document.getElementById('webhook-url-section').classList.add('hidden');
+      document.getElementById('preview-section').classList.remove('hidden');
+      document.getElementById('spamming-section').classList.remove('hidden');
+
+      document.getElementById('webhook-name').innerText = webhookURL.split("/")[5];
+      document.getElementById('server-name').innerText = "My Discord Server";
+      document.getElementById('message-preview').innerText = "No message yet";
+      document.getElementById('user-preview').innerText = "Anonymous";
+    }
+
+    function isValidURL(url) {
+      try {
+        new URL(url);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function startSpamming() {
+      const webhookURL = localStorage.getItem('webhookURL');
+      const message = document.getElementById('message').value;
+      const username = document.getElementById('username').value || 'Anonymous';
+
+      document.getElementById('message-preview').innerText = message;
+      document.getElementById('user-preview').innerText = username;
+
+      if (!message || !webhookURL) {
+        alert('Please enter a message and set up your webhook.');
+        return;
+      }
+
+      spamInterval = setInterval(() => {
+        axios.post(webhookURL, {
+          content: message,
+          username: username
+        }).then(response => {
+          console.log('Message sent:', response.data);
+        }).catch(error => {
+          console.error('Error sending message:', error);
+        });
+      }, 2000);
+
+      document.getElementById('status-message').innerText = "Spamming started!";
+    }
+
+    function stopSpamming() {
+      clearInterval(spamInterval);
+      document.getElementById('status-message').innerText = "Spamming stopped.";
     }
   </script>
 </body>
